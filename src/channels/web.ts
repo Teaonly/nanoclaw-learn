@@ -62,14 +62,20 @@ export class WebChannel implements Channel {
     });
   }
 
-  private handleRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
+  private handleRequest(
+    req: http.IncomingMessage,
+    res: http.ServerResponse,
+  ): void {
     const url = new URL(req.url || '/', `http://localhost:${this.port}`);
     const pathname = url.pathname;
 
     // CORS headers for all responses
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Content-Type, Authorization',
+    );
 
     if (req.method === 'OPTIONS') {
       res.writeHead(204);
@@ -111,12 +117,19 @@ export class WebChannel implements Channel {
     });
   }
 
-  private jsonResponse(res: http.ServerResponse, status: number, data: unknown): void {
+  private jsonResponse(
+    res: http.ServerResponse,
+    status: number,
+    data: unknown,
+  ): void {
     res.writeHead(status, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(data));
   }
 
-  private async handleSend(req: http.IncomingMessage, res: http.ServerResponse): Promise<void> {
+  private async handleSend(
+    req: http.IncomingMessage,
+    res: http.ServerResponse,
+  ): Promise<void> {
     try {
       const body = JSON.parse(await this.readBody(req));
       const { password, message, sessionId } = body as {
@@ -144,7 +157,13 @@ export class WebChannel implements Channel {
       const groups = this.opts.registeredGroups();
       if (!groups[chatJid]) {
         // Store metadata so the orchestrator can discover it
-        this.opts.onChatMetadata(chatJid, timestamp, `Web Chat ${sid.slice(0, 8)}`, 'web', false);
+        this.opts.onChatMetadata(
+          chatJid,
+          timestamp,
+          `Web Chat ${sid.slice(0, 8)}`,
+          'web',
+          false,
+        );
 
         // We need to auto-register. We'll use the IPC-style approach:
         // Store the message and let it be picked up. But first we need the group registered.
@@ -198,7 +217,10 @@ export class WebChannel implements Channel {
     }
   }
 
-  private async handlePoll(req: http.IncomingMessage, res: http.ServerResponse): Promise<void> {
+  private async handlePoll(
+    req: http.IncomingMessage,
+    res: http.ServerResponse,
+  ): Promise<void> {
     try {
       const body = JSON.parse(await this.readBody(req));
       const { password, sessionId } = body as {
