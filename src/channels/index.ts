@@ -12,4 +12,6 @@
 // whatsapp
 
 // web
-import './web.js';
+//import "./web.js";
+// qq
+import './qq.js';
