@@ -413,7 +413,7 @@ export class QQChannel implements Channel {
         );
 
         const safeId = chatJid.replace(/[:/]/g, '-');
-        const folder = `qq-${safeId}`;
+        const folder = `${safeId}-group`;
         const name = isGroup
           ? `QQ群-${data.group_openid?.slice(0, 8)}`
           : `QQ私聊-${senderId.slice(0, 8)}`;
