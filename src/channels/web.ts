@@ -22,11 +22,7 @@ export class WebChannel implements Channel {
   name = 'web';
 
   private server: http.Server | null = null;
-  private opts: {
-    onMessage: OnInboundMessage;
-    onChatMetadata: OnChatMetadata;
-    registeredGroups: () => Record<string, RegisteredGroup>;
-  };
+  private opts: ChannelOpts;
   private password: string;
   private port: number;
   private connected = false;
@@ -36,15 +32,7 @@ export class WebChannel implements Channel {
   // Map of chatJid -> pending long-poll response
   private pendingPolls = new Map<string, PendingResponse>();
 
-  constructor(
-    password: string,
-    port: number,
-    opts: {
-      onMessage: OnInboundMessage;
-      onChatMetadata: OnChatMetadata;
-      registeredGroups: () => Record<string, RegisteredGroup>;
-    },
-  ) {
+  constructor(password: string, port: number, opts: ChannelOpts) {
     this.password = password;
     this.port = port;
     this.opts = opts;
@@ -156,40 +144,13 @@ export class WebChannel implements Channel {
       // Auto-register this web session as a group if not already registered
       const groups = this.opts.registeredGroups();
       if (!groups[chatJid]) {
-        // Store metadata so the orchestrator can discover it
-        this.opts.onChatMetadata(
-          chatJid,
-          timestamp,
-          `Web Chat ${sid.slice(0, 8)}`,
-          'web',
-          false,
-        );
-
-        // We need to auto-register. We'll use the IPC-style approach:
-        // Store the message and let it be picked up. But first we need the group registered.
-        // For web chats, we auto-register with no trigger requirement.
-        const { setRegisteredGroup } = await import('../db.js');
-        const { resolveGroupFolderPath } = await import('../group-folder.js');
+        const groupName = `Web Chat ${sid.slice(0, 8)}`;
         const folderName = `web-${sid.slice(0, 8)}`;
 
-        // Create the group folder
-        const fs = await import('fs');
-        const path = await import('path');
-        const groupDir = resolveGroupFolderPath(folderName);
-        fs.mkdirSync(path.join(groupDir, 'logs'), { recursive: true });
-
-        const group: RegisteredGroup = {
-          name: `Web Chat ${sid.slice(0, 8)}`,
-          folder: folderName,
-          trigger: `@${ASSISTANT_NAME}`,
-          added_at: timestamp,
-          requiresTrigger: false,
-        };
-        setRegisteredGroup(chatJid, group);
-
-        // Reload registered groups in memory (the orchestrator reads from DB)
-        // We need to update the in-memory state too
-        groups[chatJid] = group;
+        // Store metadata so the orchestrator can discover it
+        this.opts.onChatMetadata(chatJid, timestamp, groupName, 'web', false);
+        // auto create target group
+        this.opts.autoRegisterGroup(chatJid, groupName, folderName, true);
       }
 
       // Prepend trigger to ensure it always activates

@@ -507,6 +507,24 @@ async function main(): Promise<void> {
       isGroup?: boolean,
     ) => storeChatMetadata(chatJid, timestamp, name, channel, isGroup),
     registeredGroups: () => registeredGroups,
+    // 自动注册 Group ，否则无法进行对话
+    autoRegisterGroup: (
+      chatJid: string,
+      name: string,
+      folder: string,
+      requiresTrigger: boolean,
+    ) => {
+      const timestamp = new Date().toISOString();
+      const group: RegisteredGroup = {
+        name: name,
+        folder: folder,
+        trigger: `@${ASSISTANT_NAME}`,
+        added_at: timestamp,
+        requiresTrigger: requiresTrigger,
+      };
+      registerGroup(chatJid, group);
+      return group;
+    },
   };
 
   // Create and connect all registered channels.
