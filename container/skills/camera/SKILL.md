@@ -7,9 +7,9 @@ description: 店铺安防监控摄像头工具，你可以访问当前最新的�
 
 获摄像头最新图像，历史图像记录。其中录像数据，大约每分钟一张图像，记录最近72小时的图像数据。两个服务通过 http api 访问获得！ 
 
-# Important enviromeent variable , saved in local .env file
-- BASE_URL   : the prefix of http api url
-- BOT_ID     : the ID for camera
+# Important environment variables has been set in the system, you can use them directly.
+- 'BASE_URL'   : the prefix of http api url
+- 'BOT_ID'     : the ID for camera
 
 ## 'fetch' HTTP API 
 
