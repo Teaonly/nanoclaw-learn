@@ -29,7 +29,7 @@ curl -X POST "${BASE_URL}/xiaoer/api/upload" \
   -H "Content-Type: application/json" \
   -d '{
     "id": "${BOT_ID}",
-    "html": "<div class=\"container\">...</div>",
+    "html": "<html><div class=\"container\">...</div></html>",
     "css": ".container { max-width: 1200px; }",
     "js": "console.log(\"loaded\");"
   }'
@@ -40,7 +40,7 @@ curl -X POST "${BASE_URL}/xiaoer/api/upload" \
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
 | id | string | 是 | 店铺唯一标识符，不能包含 `..`、`/`、`\`，从环境变量读取 'BOT_ID' |
-| html | string | 否 | HTML 内容（body 部分的代码） |
+| html | string | 否 | HTML 完整内容，要加载对应的CSS/JS |
 | css | string | 否 | CSS 样式代码 |
 | js | string | 否 | JavaScript 代码 |
 
@@ -58,7 +58,7 @@ curl -X POST "${BASE_URL}/xiaoer/api/upload" \
 * 注意不要使用其他第三方库，只能使用提供的第三方库，如 tailwind。 
 * 提供的 index.html 是完整的，要按正确的路径加载css, js等文件。
 
-## 各种文件的URL路径
+## 各种文件的URL路径，注意这里使用环境变量名字，需要用环境变量真实值填充
 
 - `${BASE_URL}/xiaoer/preview/${BOT_ID}/index.html` - HTML 内容，也店铺网页入口
 - `${BASE_URL}/xiaoer/preview/${BOT_ID}/style.css` - CSS 样式
