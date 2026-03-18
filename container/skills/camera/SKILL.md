@@ -15,7 +15,7 @@ description: 店铺安防监控摄像头工具，你可以访问当前最新的�
 
 Fetch last image of the survillance camera, the last image is updated every minute.
 
-- URL:   `${BASE_URL}/api/xiaoer/fetch?bot_id=${BOT_ID}`
+- URL:   `${BASE_URL}/xiaoer/api/fetch?bot_id=${BOT_ID}`
 
 - RETURN: return a json object `CameraImageURL`, timestamp is seconds timestamp.
 
@@ -30,7 +30,7 @@ interface CameraImageURL {
 
 查询历史录像的截图，大约1分钟，记录一张图，按时间段进行查询，主要不要使用太大的时间跨度。
 
-- URL:   `${BASE_URL}/api/xiaoer/query?bot_id=${BOT_ID}&from=_START_TIME_&to=_END_TIME_`
+- URL:   `${BASE_URL}/xiaoer/api/query?bot_id=${BOT_ID}&from=_START_TIME_&to=_END_TIME_`
 
 from 和 to 是时间戳，1970年1月1日以来的秒数 timestamp ，返回这个时间段内的图像记录。
 

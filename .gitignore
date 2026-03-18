@@ -21,6 +21,7 @@ groups/global/*
 # Secrets
 *.keys.json
 .env
+.env_container
 
 # Temp files
 .tmp-*
