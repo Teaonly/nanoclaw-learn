@@ -14,4 +14,6 @@
 // web
 //import "./web.js";
 // qq
-import './qq.js';
+//import './qq.js';
+// wechat
+import './wechat.js';
